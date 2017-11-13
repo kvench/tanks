@@ -8,25 +8,25 @@ def make_choice(x,y,field):
         for i in range(x+1, width):
             if field[i][y] == -1:
                 break
-            if field[i][y] not in [0]:
+            if field[i][y] not in [-1]:
                 return "go_right"
 
         for i in range(0, x):
             if field[i][y] == -1:
                 break
-            if field[i][y] not in [0]:
+            if field[i][y] not in [-1]:
                 return "go_left"
 
         for i in range(0, y):
             if field[x][i] == -1:
                 break
-            if field[x][i] not in [0]:
-                return "go_up"   
+            if field[x][i] not in [-1]:
+                return "go_up"  
 
         for i in range(y+1, height):
             if field[x][i] == -1:
                 break 
-            if field[x][i] not in [0]:
+            if field[x][i] not in [-1]:
                 return "go_down"
        
         
