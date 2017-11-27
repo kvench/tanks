@@ -1,70 +1,52 @@
-from copy import deepcopy
+
+
+
+ from copy import deepcopy
 import random
 def make_choice(x,y,field):
     width = len(field)
     height = len(field[0])
+    actions = ["go_up","go_down",
+               "go_left","go_right"]
 
-    if field[x][y]['life'] <= 5:
 
-        for i in range(x+1, width):
-            if field[i][y] == -1:
-                break
-            if field[i][y] not in [-1]:
-                return "go_right"
 
-        for i in range(0, x):
-            if field[i][y] == -1:
-                break
-            if field[i][y] not in [-1]:
-                return "go_left"
 
-        for i in range(0, y):
-            if field[x][i] == -1:
-                break
-            if field[x][i] not in [-1]:
-                return "go_up"  
-
-        for i in range(y+1, height):
-            if field[x][i] == -1:
-                break 
-            if field[x][i] not in [-1]:
-                return "go_down"
 #стреляльная часть
 
-
-    for i in range(0, x):
+   for i in range(0, x):
         if field[i][y] == -1:
             break 
-        if field[i][y] not in [0,1,-1]:
+        if field[i][y] not in [0,1,-1] and field[x][y]['life'] > field[i][y]['life']:
             return "fire_left"
 
 
     for i in range(x+1, width):
         if field[i][y] == -1:
             break
-        if field[i][y] not in [0,1,-1]:
+        if field[i][y] not in [0,1,-1] and field[x][y]['life'] > field[i][y]['life']:
             return "fire_right"
 
 
     for i in range(0, y):
         if field[x][i] == -1:
             break
-        if field[x][i] not in [0,1,-1]:
+        if field[x][i] not in [0,1,-1] and field[x][y]['life'] > field[i][y]['life']:
             return "fire_up"
            
 
     for i in range(y+1, height):
         if field[x][i] == -1:
             break 
-        if field[x][i] not in [0,1,-1]:
+        if field[x][i] not in [0,1,-1] and field[x][y]['life'] > field[i][y]['life']:
             return "fire_down"
 #конец стреляльной части
     
 #умный деньгосбор
     mapOfCoins = field 
 
-    startX = [x]
-    startY = [y]
+    startX = x
+    startY = y
 
     width = len(mapOfCoins)
     height = len(mapOfCoins[0])
@@ -85,43 +67,33 @@ def make_choice(x,y,field):
             continue
 
         # если мы уже были в точке
-        if visitedMap[x][y] == 'x':
+        if visitedMap[x][y] == -1:
+            continue
+        if mapOfCoins[x][y] not in [1, -1, 0] and (x,y)!=(startX, startY):
             continue
 
-        # если это стена
-        if visitedMap[x][y] == '#':
-            continue
-
-        # если нашли монетку
-        if mapOfCoins[x][y] == '*':
-            print("path to star = ", S)
-            print(path)
-            printMap(mapOfCoins)
-            exit()
-
+# если нашли монетку
+        if mapOfCoins[x][y] == 1:
+            return path[0]  
+        
         # помечаем клетку, как посещенную
-        visitedMap[x][y] = 'x'
+        visitedMap[x][y] = -1
         # добавляем соседей в очередь
         newPath = deepcopy(path)
-        newPath.append('>')
+        newPath.append('go_right')
         points.append((x+1, y, S+1, newPath))
 
         newPath = deepcopy(path)
-        newPath.append('d')
+        newPath.append('go_down')
         points.append((x, y+1, S+1, newPath))
 
         newPath = deepcopy(path)
-        newPath.append('<')
+        newPath.append('go_left')
         points.append((x-1, y, S+1, newPath))
 
         newPath = deepcopy(path)
-        newPath.append('^')
+        newPath.append('go_up')
         points.append((x, y-1, S+1, newPath))
 
-        printMap(visitedMap)
-
-        actions = ["fire_up", "fire_down",
-               "fire_left", "fire_right", 
-               "go_up","go_down",
-               "go_left","go_right"]
-        return random.choice(actions)
+        
+    return random.choice(actions)
